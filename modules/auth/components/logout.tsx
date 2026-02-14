@@ -8,13 +8,13 @@ const Logout = ({children,className}:{children?:ReactNode,className?:string}) =>
 
   
   return (
-    <span className={className} onClick={()=>signOut({
+   <button className={className} onClick={()=>signOut({
         fetchOptions:{
             onSuccess:()=>{
                 router.push('/login')
             }
         }
-    })}>{children}</span>
+    })}>{children}</button>
   )
 }
 

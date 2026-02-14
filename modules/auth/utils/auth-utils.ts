@@ -16,23 +16,23 @@ export const requireAuth = async () => {
 }
 
 
-// export const requireUnAuth = async () => {
-//     const session = await auth.api.getSession({
-//         headers: await headers()
-//     })
-//     if (session) {
-//         redirect('/')
-//     }
-//     return session
-// }
-
 export const requireUnAuth = async () => {
     const session = await auth.api.getSession({
         headers: await headers()
     })
     if (session) {
-     const referer = (await headers()).get('referer') || '/';
-    redirect(referer);
+        redirect('/')
     }
     return session
 }
+
+// export const requireUnAuth = async () => {
+//     const session = await auth.api.getSession({
+//         headers: await headers()
+//     })
+//     if (session) {
+//      const referer = (await headers()).get('referer') || '/';
+//     redirect(referer);
+//     }
+//     return session
+// }
