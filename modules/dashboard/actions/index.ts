@@ -23,13 +23,17 @@ export async function getDashboardStats() {
         //TODO: Total Connected Repos from DB
         const totalRepo = 30; //as of now its a static
 
+        const userName = user?.login
+
         //get contribution
-        const calander = await fetchUserContributions(token, user?.login)
+        const calander = await fetchUserContributions(token,userName )        
         const totalCommites = calander?.totalContributions || 0
+
+        console.log(JSON.stringify(calander, null, 2))
 
         //Counting PR from DB or Github
         const { data: prs } = await oktokit.rest.search.issuesAndPullRequests({
-            q: `author:${user?.login} type:pr`,
+            q: `author:${userName} type:pr`,
             per_page: 1
         })
 
@@ -66,9 +70,10 @@ export async function getMonthlyActivity() {
 
         //get user from github
         const { data: user } = await oktokit.rest.users.getAuthenticated()
+        const userName = user?.login
 
         //get contribution
-        const calander = await fetchUserContributions(token, user?.login)
+        const calander = await fetchUserContributions(token, userName)
 
         if (!calander) {
             return []
@@ -99,18 +104,18 @@ export async function getMonthlyActivity() {
             monthlyData[monthKey] = { commits: 0, prs: 0, reviews: 0 }
         }
 
+
+        const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1)
         calander.weeks.forEach((week: any) => {
             week.contributionDays.forEach((day: any) => {
                 const date = new Date(day.date)
+                 if (date < sixMonthsAgo) return
                 const monthKey = monthsNames[date.getMonth()]
                 if (monthlyData[monthKey]) {
                     monthlyData[monthKey].commits += day.contributionCount
                 }
             });
         })
-
-        const sixMonthsAgo = new Date()
-        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
 
         //TODO: Reviews's real data
         const generateSampleReviews = () => {
@@ -160,5 +165,44 @@ export async function getMonthlyActivity() {
     } catch (error) {
         console.log("Error while fetching Monthly Activity", error)
         return []
+    }
+}
+
+export async function getContributionStats(){
+    try {
+         const session = await auth.api.getSession({
+            headers: await headers()
+        })
+
+        if (!session?.user) {
+            throw new Error('Unauthorized')
+        }
+
+        const token = await getGithubAccessToken()
+        
+        //get the actual github username from Github API
+        const octokit = new Octokit({auth:token})
+         //get user from github
+        const { data: user } = await octokit.rest.users.getAuthenticated()
+        let userName = user?.login;
+        //get contribution
+        const calander = await fetchUserContributions(token,userName)
+
+       if (!calander) {
+            return { contribution: [], totalContributions: 0 }
+        }
+
+        const contribution = calander.weeks.flatMap((week:any)=>
+            week.contributionDays.map((day:any)=>({
+                date: day.date,
+                count:day.contributionCount,
+                level:Math.min(4,Math.floor(day.contributionCount / 3))
+            }))
+        )
+
+        return {contribution, totalContributions: calander.totalContributions }
+    } catch (error) {
+        console.log("Error while fetching Contribution Stats:", error)
+          return { contribution: [], totalContributions: 0 }
     }
 }

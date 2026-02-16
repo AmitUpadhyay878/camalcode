@@ -30,7 +30,8 @@ export const getGithubAccessToken = async () => {
 //fetching the user's contributions from github using the access token
 export async function fetchUserContributions(token: string, username: string) {
   const octokit = new Octokit({ auth: token })
-    const query=`
+
+  const query = `
     query($username: String!) {
       user(login: $username) {
         contributionsCollection {
@@ -42,33 +43,19 @@ export async function fetchUserContributions(token: string, username: string) {
                 date
                 color
               }
+            }
           }
         }
       }
-    }`
+    }
+  `
 
-
-    // interface contributiondata {
-    //     user: {
-    //         contributionsCollection: {
-    //             contributionCalendar: {
-    //                 totalContributions: number,
-    //                 weeks: {
-    //                     contributionDays: {
-    //                         contributionCount: number,
-    //                         date: string | Date,
-    //                         color: string
-    //                     }[]
-    //                 }[]
-    //             }
-    //         }
-    //     }
-    // }
-
-   try{
+  try {
     const response: any = await octokit.graphql(query, { username })
-    return response.user.contributionsCollection.contributionCalendar
-   }catch(err){
+
+    return response?.user?.contributionsCollection?.contributionCalendar ?? null
+  } catch (err) {
     console.error('Error fetching contributions:', err)
-   }
+    return null
+  }
 }
