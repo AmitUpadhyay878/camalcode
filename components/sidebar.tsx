@@ -106,13 +106,13 @@ const DashboardSidebar = () => {
                     }
                 </SidebarMenu>
             </SidebarContent>
-            <SidebarFooter className='border-t px-3 py-4'>
+            <SidebarFooter className='border-t px-3 py-4 '>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild className='w-full'>
                                 <SidebarMenuButton
-                                    className='h-12 px-4 rounded-lg data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent/50 transition-colors'
+                                    className='h-12 cursor-pointer px-4 rounded-lg data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent/50 transition-colors'
                                     size={"lg"}
                                 >
                                     <Avatar className='h-6 w-6 rounded-lg shrink-0'>
