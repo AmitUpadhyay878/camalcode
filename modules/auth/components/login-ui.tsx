@@ -4,6 +4,7 @@ import {signIn} from '@/lib/auth-client'
 import {Github, GithubIcon} from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import Image from 'next/image'
+import Link from 'next/link'
 
 
 const LoginUI = () => {
@@ -78,9 +79,9 @@ const LoginUI = () => {
 
                     {/* bottom links */}
                     <div className='flex items-center justify-center gap-4 mt-8 text-gray-500 text-sm'>
-                        <a href="#" className='hover:text-gray-400'>Privacy Policy</a>
+                        <Link href="/privacy-policy" className='hover:text-gray-400'>Privacy Policy</Link>
                         <span>|</span>
-                        <a href="#" className='hover:text-gray-400'>Terms of Service</a>
+                        <Link href="/terms-of-services" className='hover:text-gray-400'>Terms of Service</Link>
                     </div>
             </div>
             </div>

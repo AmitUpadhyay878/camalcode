@@ -4,6 +4,7 @@ import { ActivityCalendar } from 'react-activity-calendar'
 import { useTheme } from 'next-themes'
 import { useQuery } from '@tanstack/react-query'
 import { getContributionStats } from '@/modules/dashboard/actions'
+import { Spinner } from '@/components/ui/spinner'
 
 
 
@@ -18,10 +19,10 @@ const ContributionGraph = () => {
 
     if (isLoading) {
         return (
-            <div className='w-full flex flex-col item-center justify-center p-8'>
-                <div className='animate-pulse text-muted-foreground'>
-                    Loading contribution Data ...
-                </div>
+            <div className='w-full flex flex-col items-center justify-center p-8'>
+                 <div className='h-80 w-full flex items-center justify-center'>
+                                    <Spinner className='h-10 w-10' />
+                                </div>
             </div>
         )
     }
@@ -45,7 +46,7 @@ const ContributionGraph = () => {
                         data={data?.contribution}
                         colorScheme={theme === "dark" ?"dark"  :"light" }
                         blockSize={11}
-                        blockMargin={4}
+                        blockMargin={6}
                         fontSize={14}
                         showWeekdayLabels
                         showMonthLabels

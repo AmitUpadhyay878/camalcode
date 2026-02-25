@@ -37,10 +37,10 @@ const DashboardSidebar = () => {
 
     const NavbarItems = [
         { title: 'Dashboard', url: '/dashboard', icon: BookOpen },
-        { title: 'Repository', url: '/dashboard/repository', icon: Github },
-        { title: 'Review', url: '/dashboard/review', icon: SearchIcon },
-        { title: 'Subscriptions', url: '/dashboard/subscriptions', icon: CardSim },
-        { title: 'Settings', url: '/dashboard/settings', icon: Settings }
+        { title: 'Repository', url: '/repository', icon: Github },
+        { title: 'Review', url: '/review', icon: SearchIcon },
+        { title: 'Subscriptions', url: '/subscriptions', icon: CardSim },
+        { title: 'Settings', url: '/settings', icon: Settings }
     ]
 
 
