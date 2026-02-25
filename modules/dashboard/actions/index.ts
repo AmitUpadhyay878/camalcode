@@ -29,8 +29,6 @@ export async function getDashboardStats() {
         const calander = await fetchUserContributions(token,userName )        
         const totalCommites = calander?.totalContributions || 0
 
-        console.log(JSON.stringify(calander, null, 2))
-
         //Counting PR from DB or Github
         const { data: prs } = await oktokit.rest.search.issuesAndPullRequests({
             q: `author:${userName} type:pr`,
@@ -38,7 +36,6 @@ export async function getDashboardStats() {
         })
 
         const totalPRs = prs.total_count
-
 
         //TODO: AI review from Database
         const totalReviews = 44  //as of now its a static
@@ -53,7 +50,6 @@ export async function getDashboardStats() {
         }
     }
 }
-
 
 export async function getMonthlyActivity() {
     try {
@@ -103,7 +99,6 @@ export async function getMonthlyActivity() {
             const monthKey = monthsNames[date.getMonth()]
             monthlyData[monthKey] = { commits: 0, prs: 0, reviews: 0 }
         }
-
 
         const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1)
         calander.weeks.forEach((week: any) => {
