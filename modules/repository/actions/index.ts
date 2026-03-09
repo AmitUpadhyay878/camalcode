@@ -59,7 +59,9 @@ export const connectRepository =async(owner:string,repo:string,githubId:number)=
                     url:`https://github.com/${owner}/${repo}`,
                     userId:session?.user?.id
                 }})
-            }
+            }else {
+          throw new Error('Webhook creation failed; repository not connected.')
+           }
 
             //TODO: Increament Repositiory Count for usage tracking
 
@@ -70,6 +72,7 @@ export const connectRepository =async(owner:string,repo:string,githubId:number)=
             return webhook
 
         } catch (error) {
-            console.log("Error while connecting Repository", error) 
+                console.error("Error while connecting Repository", error)
+            throw error
         }
 }
