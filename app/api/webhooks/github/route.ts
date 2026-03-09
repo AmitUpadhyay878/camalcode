@@ -1,10 +1,29 @@
+import { timingSafeEqual,createHmac } from 'crypto'
 import {NextRequest,NextResponse} from 'next/server'
 
 export async function POST(request:NextRequest){
     try {
-        const body = await request.json()
+       const rawBody = await request.text()
+       const signature = request.headers.get("x-hub-signature-256")
+       const secret = process.env.GITHUB_WEBHOOK_SECRET
 
-        const event = request.headers.get("X-GitHub-Event")
+       if (!secret) {
+           console.error("GITHUB_WEBHOOK_SECRET is not configured")
+           return NextResponse.json({error:"Server misconfiguration"}, {status:500})
+       }
+
+       if (!signature) {
+           return NextResponse.json({error:"Missing signature"}, {status:401})
+       }
+
+       const hmac = createHmac('sha256', secret)
+       const digest = `sha256=${hmac.update(rawBody).digest('hex')}`
+       if (!timingSafeEqual(Buffer.from(signature), Buffer.from(digest))) {
+           return NextResponse.json({error:"Invalid signature"}, {status:401})
+       }
+
+       const body = JSON.parse(rawBody)
+         const event = request.headers.get("X-GitHub-Event")
 
         if(event === "ping"){
             return NextResponse.json({message:"pong"},{status:200})
@@ -15,7 +34,7 @@ export async function POST(request:NextRequest){
         return NextResponse.json({message:"Event received"},{status:200})
     
     }catch(error){
-            console.log("Error while handling github webhook", error)
-            return NextResponse.json({error:"Failed to handle webhook"}, {status:500})  
+            console.error("Error while handling github webhook", error)
+             return NextResponse.json({error:"Failed to handle webhook"}, {status:500}) 
         }
         }
