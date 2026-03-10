@@ -26,9 +26,9 @@ const LoginUI = () => {
     }
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-black via-black to-zinc-900 text-white flex">
+        <div className="min-h-screen bg-linear-to-br from-black via-black to-zinc-900 text-white flex flex-col lg:flex-row">
             {/* left section */}
-            <div className="flex flex-1 flex-col justify-center px-12 py-16">
+            <div className="flex flex-1 flex-col justify-center px-6 py-12 lg:px-12 lg:py-16">
                 <div className='max-w-lg'>
                     <div className='mb-16'>
                         <div className='inline-flex items-center gap-2 text-2xl font-bold'>
@@ -55,7 +55,7 @@ const LoginUI = () => {
                 />
             </div>
             {/* right section  */}
-            <div className="flex flex-1 flex-col items-center justify-center px-12 py-16">
+            <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 lg:px-12 lg:py-16">
                 <div className='w-full max-w-sm'>
                     <div className='mb-12'>
                         <h2 className='text-3xl font-bold mb-4'>Welcome Back</h2>

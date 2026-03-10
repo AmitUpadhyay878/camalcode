@@ -26,6 +26,9 @@ const RepositoryList = () => {
     const queryClient = useQueryClient()
     const[disconnectedAllOpen,setDisconnectedAllOpen] = useState(false)
 
+    const [disconnectingId, setDisconnectingId] = useState<string | null>(null)
+
+
     const {data: repositories, isLoading, isError} = useQuery({
         queryKey: ['connected-repositories'],
         queryFn: async () => await getConnectedRepositories(),
@@ -35,6 +38,7 @@ const RepositoryList = () => {
     
     const disconnectMutation = useMutation({
         mutationFn: async (repoId: string) => {
+            setDisconnectingId(repoId)
             return await disconnectRepository(repoId)
         },
         onSuccess: (result) => {
@@ -53,7 +57,8 @@ const RepositoryList = () => {
         },
         onError: (error) => {
             toast.error(`Failed to disconnect repository: ${error.message}`)
-        }
+        },
+          onSettled: () => setDisconnectingId(null),
     })
 
 
@@ -89,7 +94,7 @@ const RepositoryList = () => {
                     <CardDescription>manage your connected repositories.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className='animated-pulse space-y-4'>
+                    <div className='animate-pulse space-y-4'>
                         <div className='h-20 bg-muted rounded'></div>
                         <div className='h-20 bg-muted rounded'></div>
                     </div>
@@ -182,10 +187,9 @@ const RepositoryList = () => {
                                         <AlertDialogAction
                                             onClick={() => disconnectMutation.mutate(repo.id)}
                                             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
-                                            disabled={disconnectMutation.isPending}>
-                                            {
-                                                disconnectMutation.isPending ? "Disconnecting..." : "Disconnect"
-                                            }
+                                            disabled={disconnectingId === repo.id}
+                                            >
+                                           {disconnectingId === repo.id ? "Disconnecting..." : "Disconnect"}
                                         </AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
