@@ -60,7 +60,7 @@ export function ProfileForm() {
           <CardDescription>Please wait while we Updating your profile information.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='animated-pulse space-y-4'>
+         <div className='animate-pulse space-y-4'>
             <div className='h-10 bg-muted rounded'></div>
             <div className='h-10 bg-muted rounded'></div>
           </div>

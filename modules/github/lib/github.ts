@@ -82,13 +82,12 @@ export const createWebHook = async (owner: string, repo: string) => {
     const token = await getGithubAccessToken()
     const octokit = new Octokit({ auth: token })
 
-
-
-    const webhookURL = `${process.env.APP_BASE_URL}/api/webhooks/github`
-
     if (!process.env.APP_BASE_URL) {
       throw new Error('APP_BASE_URL env var is not set')
     }
+
+    const webhookURL = `${process.env.APP_BASE_URL}/api/webhooks/github`
+
 
     const { data: hooks } = await octokit.rest.repos.listWebhooks({ owner, repo })
     const existingHook = hooks.find(hook => hook.config.url == webhookURL)
@@ -96,13 +95,19 @@ export const createWebHook = async (owner: string, repo: string) => {
     if (existingHook) {
       return existingHook
     }
+
+    
+  if (!process.env.GITHUB_WEBHOOK_SECRET) {
+   throw new Error('GITHUB_WEBHOOK_SECRET env var is not set')
+  }
+
     const { data } = await octokit.rest.repos.createWebhook({
       owner,
       repo,
       config: {
         url: webhookURL,
         content_type: "json",
-        secret: process.env.GITHUB_WEBHOOK_SECRET!
+        secret: process.env.GITHUB_WEBHOOK_SECRET
       },
       events: [
         "pull_request"
@@ -112,7 +117,8 @@ export const createWebHook = async (owner: string, repo: string) => {
     return data
 
   } catch (error) {
-    console.log("Something not right for fetching or creating Webhook: ", error)
+    console.error("Something not right for fetching or creating Webhook: ", error)
+    return null
   }
 }
 
