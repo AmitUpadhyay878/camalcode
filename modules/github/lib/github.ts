@@ -152,3 +152,99 @@ export const deleteWebHook = async (owner: string, repo: string) => {
   }
 
 }
+
+export async function getRepoFilesContent(owner: string, repo: string, token: string, path:string=""):Promise<{path:string,content:string}[]> {
+     const octokit = new Octokit({ auth: token })
+
+
+      const {data} = await octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path
+      })
+
+      if(!Array.isArray(data)){
+        if(data.type === "file" && data.content){
+          return [{
+            path: data.path,
+            content: Buffer.from(data.content, 'base64').toString('utf-8')
+          }]
+        }
+        return[]
+      }
+
+      let files:{path:string,content:string}[] = []
+
+      for(const item of data){
+        if(item.type === "file"){
+          const {data: fileData} = await octokit.rest.repos.getContent({
+            owner,
+            repo,
+            path: item.path
+          })
+          
+          if(!Array.isArray(fileData) && fileData.type === "file" && fileData.content){
+
+            if(!item.path.match(/\.(png|jpg|jpeg|gif|bmp|svg|ico|zip|pdf|tar|gz)$/i)){ 
+              
+              files.push({
+                path: fileData.path,
+                content: Buffer.from(fileData.content, 'base64').toString('utf-8')
+              })
+            }
+          }
+         
+        }
+
+         else if(item.type === "dir"){
+            const subFiles = await getRepoFilesContent(owner, repo, token, item?.path)
+            files = files.concat(subFiles)
+          }
+      }
+
+      return files
+
+
+      
+
+
+  // try {
+  //   const { data: repoData } = await octokit.rest.repos.get({
+  //     owner,
+  //     repo
+  //   })  
+  //   const defaultBranch = repoData.default_branch
+
+  //   const { data: treeData } = await octokit.rest.git.getTree({
+  //     owner,
+  //     repo,
+  //     tree_sha: defaultBranch,
+  //     recursive: "true"
+  //   })  
+  //   const files = treeData.tree.filter((item: any) => item.type === "blob")
+
+  //   const fileContents = await Promise.all(files.map(async (file: any) => {
+  //     try {
+  //       const { data: fileData } = await octokit.rest.git.getBlob({
+  //         owner,
+  //         repo,
+  //         file_sha: file.sha
+  //       })
+  //       const content = Buffer.from(fileData.content, 'base64').toString('utf-8')
+  //       return {  
+  //         path: file.path,
+  //         content
+  //       }
+  //     } catch (err) {
+  //       console.error(`Error fetching content for file ${file.path}:`, err)
+  //       return null
+  //     } 
+  //   }))
+
+  //   return fileContents.filter((file: any) => file !== null)
+  // }
+  // catch (err) {
+  //   console.error('Error fetching repository files:', err)
+  //   return []
+  // }
+}

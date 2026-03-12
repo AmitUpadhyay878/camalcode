@@ -3,6 +3,7 @@ import prisma from '@/lib/db'
 import {auth} from '@/lib/auth'
 import {headers} from 'next/headers'
 import {createWebHook, getRepositories} from '@/modules/github/lib/github'
+import { inngest } from '@/inngest/client'
 
 
 export const fetchRepositories =async (page:number =1, perPage:number=10)=>{
@@ -66,7 +67,20 @@ export const connectRepository =async(owner:string,repo:string,githubId:number)=
             //TODO: Increament Repositiory Count for usage tracking
 
 
-            //TODO: trigger Repository indexing for RAG
+           //Inngest background Event for Repository Connected
+            try{
+                    await inngest.send({
+                        name:"repository.connected",
+                        data:{
+                            owner,
+                            repo,
+                            userId: session?.user?.id
+                        }
+                    })
+
+            }catch(error){
+                    console.error("Failed to send repository.connected event to Inngest", error)
+            }
 
 
             return webhook

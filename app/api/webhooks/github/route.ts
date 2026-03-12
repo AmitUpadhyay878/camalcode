@@ -34,9 +34,16 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ message: "pong" }, { status: 200 })
         }
 
-        //ToDO: Handle other events like push, pull_request etc and trigger indexing for RAG
+       // return NextResponse.json({ message: "Event received" }, { status: 200 })
 
-        return NextResponse.json({ message: "Event received" }, { status: 200 })
+       if (event !== "pull_request") {
+        return NextResponse.json({ error: "Unhandled event type" }, { status: 400 })
+       }
+
+       return NextResponse.json(
+        { error: "pull_request handling is not implemented yet" },
+        { status: 501 },
+       )
 
     } catch (error) {
         console.error("Error while handling github webhook", error)
