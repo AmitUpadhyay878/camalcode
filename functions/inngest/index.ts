@@ -4,35 +4,40 @@ import { indexCodebase } from "@/modules/ai/lib/rag";
 import { getRepoFilesContent } from "@/modules/github/lib/github";
 
 export const indexRepo = inngest.createFunction(
-    {id:"index-repo"},
-    {event:"repository.connected"},
-    async({event,step})=>{
-        const {owner,repo,userId} = event.data;
+  { id: "index-repo" },
+  { event: "repository.connected" },
+  async ({ event, step }) => {
+    const { owner, repo, userId } = event.data;
 
-        const files = await step.run("fetch-files", async()=>{
-            const account = await prisma.account.findFirst({
-                where:{
-                    userId,
-                    providerId:"github"
-                }
-            })
+    if (!owner || !repo || !userId) {
+      throw new Error("Missing required fields: owner, repo, or userId")
+    }
 
-            if(!account?.accessToken){
-                throw new Error("GitHub account not found for user")
-            }
-
-            return await getRepoFilesContent( owner, repo, account?.accessToken)
+    const files = await step.run("fetch-files", async () => {
+      const account = await prisma.account.findFirst({
+        where: {
+          userId,
+          providerId: "github"
+        }
       })
 
-      await step.run("index-codebase", async()=>{
-        await indexCodebase(`${owner}/${repo}`, files)
+      if (!account?.accessToken) {
+        throw new Error("GitHub account not found for user")
+      }
+
+      return await getRepoFilesContent(owner, repo, account?.accessToken)
     })
 
-    return {success:true, indexedFiles:files.length}
-  }
-    )
+    await step.run("index-codebase", async () => {
+      await indexCodebase(`${owner}/${repo}`, files)
+    })
 
-    export const helloWorld = inngest.createFunction(
+    return { success: true, indexedFiles: files.length }
+  }
+)
+
+
+export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
   async ({ event, step }) => {

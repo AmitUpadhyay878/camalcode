@@ -10,4 +10,4 @@ export const pinecone = new Pinecone({
   apiKey: pineconeApiKey
 })
 
-export const pineconeIndex = pinecone.index('camalcode-vactor-embading-v1')
+export const pineconeIndex = pinecone.index('camalcode-vactor-embading-v2')

@@ -1,3 +1,4 @@
+import { reviewPullRequest } from '@/modules/ai/actions'
 import { timingSafeEqual, createHmac } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -36,14 +37,30 @@ export async function POST(request: NextRequest) {
 
        // return NextResponse.json({ message: "Event received" }, { status: 200 })
 
-       if (event !== "pull_request") {
-        return NextResponse.json({ error: "Unhandled event type" }, { status: 400 })
+       if (event === "pull_request") {
+         const action = body.action;
+         const repo = body.repository.full_name;
+         const prNumber = body.number;
+
+        const[owner, repoName] = repo.split("/")
+
+        if(action ==="opened" || action ==="synchronize"){
+            reviewPullRequest(owner, repoName, prNumber)
+            .then(()=>console.log(`review completed for ${repo} # ${prNumber}`))
+            .catch((error:any)=>console.error(`Error reviewing PR ${repo} # ${prNumber}:`, error))
+        }
        }
 
-       return NextResponse.json(
-        { error: "pull_request handling is not implemented yet" },
-        { status: 501 },
-       )
+       if (event !== "pull_request") {
+        return NextResponse.json({ message: "Event type not handled" }, { status: 200 })
+       }
+
+    //    return NextResponse.json(
+    //     { error: "pull_request handling is not implemented yet" },
+    //     { status: 501 },
+    //    )
+
+            return NextResponse.json({ message: "Event received and processed" }, { status: 200 })  
 
     } catch (error) {
         console.error("Error while handling github webhook", error)
