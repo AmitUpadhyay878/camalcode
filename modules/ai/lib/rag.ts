@@ -4,7 +4,9 @@ import {google} from '@ai-sdk/google'
 
 export async function generateEmbedding(text:string){
         const {embedding} = await embed({
-            model:   google.embeddingModel('text-embedding-004'),
+            // model:google.embeddingModel('text-embedding-004'),
+            // model:google.textEmbeddingModel("gemini-embedding-001"),
+            model:google.embeddingModel("gemini-embedding-001"),
             value:text
         })
 
@@ -50,7 +52,7 @@ export async function indexCodebase(
 
 }
 
-export async function retriveContext(query:string, repoId:string, topK:number=5){
+export async function retrieveContext(query:string, repoId:string, topK:number=5){
     const embedding = await generateEmbedding(query)
 
     const result = await pineconeIndex.query({
@@ -62,7 +64,11 @@ export async function retriveContext(query:string, repoId:string, topK:number=5)
         includeMetadata:true
     })
 
-    return result.matches.map(match=>match.metadata?.content as string).filter(Boolean)
+    //return result.matches.map(match=>match.metadata?.content as string).filter(Boolean)
+
+    return result.matches
+    .map(match => match.metadata?.content)
+    .filter((content): content is string => typeof content === 'string')
 }
 
 
@@ -142,7 +148,7 @@ export async function retriveContext(query:string, repoId:string, topK:number=5)
 //   }
 // }
 
-// export async function retriveContext(query:string, repoId:string, topK:number=5){
+// export async function retrieveContext(query:string, repoId:string, topK:number=5){
 //     const embedding = await generateEmbedding(query)
 
 //     const result = await pineconeIndex.query({
