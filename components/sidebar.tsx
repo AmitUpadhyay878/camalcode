@@ -39,7 +39,7 @@ const DashboardSidebar = () => {
         { title: 'Dashboard', url: '/dashboard', icon: BookOpen },
         { title: 'Repository', url: '/repository', icon: Github },
         { title: 'Reviews', url: '/reviews', icon: SearchIcon },
-        { title: 'Subscriptions', url: '/subscriptions', icon: CardSim },
+        { title: 'Subscription', url: '/subscription', icon: CardSim },
         { title: 'Settings', url: '/settings', icon: Settings }
     ]
 

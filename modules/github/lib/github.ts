@@ -82,11 +82,11 @@ export const createWebHook = async (owner: string, repo: string) => {
     const token = await getGithubAccessToken()
     const octokit = new Octokit({ auth: token })
 
-    if (!process.env.APP_BASE_URL) {
-      throw new Error('APP_BASE_URL env var is not set')
+    if (!process.env.NEXT_PUBLIC_APP_BASE_URL) {
+      throw new Error('NEXT_PUBLIC_APP_BASE_URL env var is not set')
     }
 
-    const webhookURL = `${process.env.APP_BASE_URL}/api/webhooks/github`
+    const webhookURL = `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/webhooks/github`
 
 
     const { data: hooks } = await octokit.rest.repos.listWebhooks({ owner, repo })
@@ -127,7 +127,7 @@ export const deleteWebHook = async (owner: string, repo: string) => {
   const token = await getGithubAccessToken()
   const octokit = new Octokit({ auth: token })
 
-  const webhookURL = `${process.env.APP_BASE_URL}/api/webhooks/github`
+  const webhookURL = `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/webhooks/github`
 
   try {
 

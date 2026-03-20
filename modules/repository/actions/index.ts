@@ -4,6 +4,7 @@ import {auth} from '@/lib/auth'
 import {headers} from 'next/headers'
 import {createWebHook, getRepositories} from '@/modules/github/lib/github'
 import { inngest } from '@/inngest/client'
+import { canConnectRepository, decrementRepositoryCount, incrementRepositoryCount } from '@/modules/payment/lib/subscription'
 
 
 export const fetchRepositories =async (page:number =1, perPage:number=10)=>{
@@ -47,7 +48,15 @@ export const connectRepository =async(owner:string,repo:string,githubId:number)=
                             throw new Error('Unauthorized')
                         }
 
-            //TODO: check user is free and connect more repos
+            //check if user can connect more repos or not.
+
+                        const canConnect = await canConnectRepository(session?.user?.id)
+
+                        if(!canConnect){
+                            //if limit reach
+                            throw new Error(`Repository limit reached, Please upgrade to PRO for unlimited repositories.`)   
+                        }
+                        
 
             
             const webhook = await createWebHook(owner, repo)
@@ -60,12 +69,11 @@ export const connectRepository =async(owner:string,repo:string,githubId:number)=
                     url:`https://github.com/${owner}/${repo}`,
                     userId:session?.user?.id
                 }})
-            }else {
-          throw new Error('Webhook creation failed; repository not connected.')
-           }
+          
 
-            //TODO: Increament Repositiory Count for usage tracking
-
+            //Increament Repositiory Count for usage tracking
+            
+            await incrementRepositoryCount(session?.user?.id)
 
            //Inngest background Event for Repository Connected
             try{
@@ -82,7 +90,7 @@ export const connectRepository =async(owner:string,repo:string,githubId:number)=
                     console.error("Failed to send repository.connected event to Inngest", error)
             }
 
-
+  }
             return webhook
 
         } catch (error) {
