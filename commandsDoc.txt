@@ -1,0 +1,7 @@
+for run :  npm run dev
+
+for prisma studio: npx prisma studio
+for prisma migration: npx prisma migrate dev --name "name of migration"
+for prisma generate: npx prisma generate
+
+for Inngest: npx --ignore-scripts=false inngest-cli@latest dev

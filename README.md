@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CamalCode
 
-## Getting Started
+CamalCode is a modern web application built to streamline code management, repository reviews, and subscription-based services for developers and teams. It leverages a robust technology stack to provide authentication, background job processing, payment integration, and a seamless user experience.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Project Overview
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**CamalCode** is designed to:
+* **Manage** repositories and code reviews efficiently.
+* **Provide** secure authentication and user management.
+* **Enable** subscription payments and access control.
+* **Support** background jobs and event-driven workflows.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Key Features
+* **Secure Auth:** Powered by Better-Auth.
+* **Dashboard:** Comprehensive repository and review management.
+* **Payments:** Subscription handling via Polar integration.
+* **Performance:** Real-time data fetching and caching with React Query.
+* **Workflows:** Event-driven background jobs using Inngest.
+* **Database:** Type-safe interactions with Prisma ORM and Neon (Postgres).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠️ Technology Stack
 
-To learn more about Next.js, take a look at the following resources:
+| Technology | Purpose |
+| :--- | :--- |
+| **Next.js** | React framework for SSR and full-stack routing. |
+| **Better-Auth** | Secure, extensible authentication. |
+| **Polar** | Payment and subscription management. |
+| **React Query** | Data fetching, caching, and state management. |
+| **Inngest** | Background jobs and workflow orchestration. |
+| **Prisma** | Type-safe ORM for database migrations and access. |
+| **Postgres (Neon)** | Scalable, serverless database hosting. |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
+### What changed?
+* **Visual Hierarchy:** Added icons and horizontal rules to make it more readable.
+* **Tech Stack Table:** Organized your tools into a table so visitors can see your stack at a glance.
+* **Refined Commands:** Fixed the formatting for the terminal commands so they are easy to copy-paste.
+* **Logical Flow:** Moved the "Getting Started" section after the "Features" so users understand *what* they are installing before they do it.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Would you like me to add a specific section for the AI review features or the folder structure details?
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---

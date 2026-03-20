@@ -13,6 +13,8 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ExternalLink, Clock, CheckCircle2, XCircle } from 'lucide-react'
+import ReactMarkdown from 'react-markdown';
+import { ReviewSkeleton } from './review-skeleton'
 
 const ReviewClient = () => {
 
@@ -24,7 +26,7 @@ const ReviewClient = () => {
     })
 
     if (isLoading) {
-        return <div>Loading ...</div>
+        return <ReviewSkeleton />
     }
 
     const reviewStatus = (status: any) => {
@@ -44,7 +46,7 @@ const ReviewClient = () => {
             case "pending":
                 return (<Badge variant="secondary" className='gap-1'>
                     <Clock className='h-3 w-3' />
-                    Panding
+                    Pending
                 </Badge>)
               
 
@@ -101,7 +103,7 @@ const ReviewClient = () => {
                                                 <div className='prose prose-sm dark-prose-invert max-w-none'>
                                                     <div className='bg-muted p-4 rounded-lg'>
                                                         <pre className='whitespace-pre-wrap text-xs'>
-                                                            {review?.review.substring(0,300)} ...   
+                                                            <ReactMarkdown>{review?.review.substring(0,310)}</ReactMarkdown> ...  
                                                         </pre>
                                                     </div>
                                                 </div>
