@@ -4,8 +4,10 @@ import { indexCodebase } from "@/modules/ai/lib/rag";
 import { getRepoFilesContent } from "@/modules/github/lib/github";
 
 export const indexRepo = inngest.createFunction(
-  { id: "index-repo" },
-  { event: "repository.connected" },
+  { id: "index-repo",
+    triggers: [
+      { event: "repository.connected" }
+    ] },
   async ({ event, step }) => {
     const { owner, repo, userId } = event.data;
 
@@ -38,8 +40,9 @@ export const indexRepo = inngest.createFunction(
 
 
 export const helloWorld = inngest.createFunction(
-  { id: "hello-world" },
-  { event: "test/hello.world" },
+  { id: "hello-world",triggers:[
+    {event: "test/hello.world"}
+  ] },
   async ({ event, step }) => {
     await step.sleep("wait-a-moment", "1s");
     return { message: `Hello ${event.data.email}!` };
