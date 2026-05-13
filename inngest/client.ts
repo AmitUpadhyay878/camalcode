@@ -1,3 +1,5 @@
 import { Inngest } from "inngest";
 
-export const inngest = new Inngest({ id: "camalcode" });
+export const inngest = new Inngest({
+  id: "camalcode",
+});
